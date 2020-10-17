@@ -1,0 +1,50 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "Title goes here";
+
+    var searchArg = Request.Form["SearchArg"];
+    var search = Request.Form["formButton"];
+
+    string artistId = "";
+    string artistName = "";
+    var partialstring = "%" + searchArg + "%";
+
+    if (string.IsNullOrEmpty(searchArg))
+    {
+        searchArg = "";
+    }
+
+    var db = Database.Open("Chinook");
+    var queryCommand = "SELECT ArtistId, Name FROM Artists WHERE Name like @0 ORDER BY Name";
+    var results = db.QuerySingle(queryCommand, partialstring);
+}
+
+<div>
+    @section pagetitle {
+        <h1>Search For Artist</h1>
+    }
+
+    @if(IsPost)
+    {
+        if(results == null)
+        {
+           <p>No artist found for artist name @searchArg</p>
+        }
+
+        else
+        {
+            artistId = results[0].ToString();
+            artistName = results.Name;
+        }
+    }
+
+<form id="theForm" action="" method="post">
+    <div class="row">
+        <div class="col-md-3">
+            <label id="SearchArg">Artist Name</label><br />
+            <input type="text" name="SearchArg" id="SearchArgID" value=""/><br /><br />
+            <button type="submit" name="formButton" value="submit" class="btn btn-primary">Search Artist</button>
+        </div>
+    </div>
+</form>
+</div>

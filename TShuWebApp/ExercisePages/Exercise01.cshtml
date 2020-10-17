@@ -65,24 +65,24 @@
             }
         }
     }
-    <form id="EX01" method="post">
-        <div class="row">
-            <div class="col-md-3">
-                Customer Name:
-                <input type="text" name="name" value="@name" />
-            </div>
+<form id="EX01" method="post">
+    <div class="row">
+        <div class="col-md-3">
+            Customer Name:
+            <input type="text" name="name" value="@name" />
+        </div>
 
-            <div class="col-md-9">
-                <label id="menuItems">Pick your meal items:</label>
-                <br />
-                <input type="checkbox" name="menuItems" value="Cheeseburger" @(Array.IndexOf(items.Split(','), "Cheeseburger") >=0? "checked" : "") />Cheeseburger<br />
-                <input type="checkbox" name="menuItems" value="Pizza" @(Array.IndexOf(items.Split(','), "Pizza") >=0? "checked" : "") />Pizza<br />
-                <input type="checkbox" name="menuItems" value="Steak" @(Array.IndexOf(items.Split(','), "Steak") >=0? "checked" : "")  />Steak<br />
-            </div>
+        <div class="col-md-9">
+            <label id="menuItems">Pick your meal items:</label>
+            <br />
+            <input type="checkbox" name="menuItems" value="Cheeseburger" @(Array.IndexOf(items.Split(','), "Cheeseburger") >= 0 ? "checked" : "") />Cheeseburger<br />
+            <input type="checkbox" name="menuItems" value="Pizza" @(Array.IndexOf(items.Split(','), "Pizza") >= 0 ? "checked" : "") />Pizza<br />
+            <input type="checkbox" name="menuItems" value="Steak" @(Array.IndexOf(items.Split(','), "Steak") >= 0 ? "checked" : "") />Steak<br />
         </div>
-        <div class="row">
-            <button type="submit" id="forButton" name="formButton" value="submit" class="btn-primary">Submit</button>
-            <button type="submit" id="forButton" name="formButton" value="reset" class="btn">Reset</button>
-        </div>
-    </form>
+    </div>
+    <div class="row">
+        <button type="submit" id="formButton" name="formButton" value="submit" class="btn-primary">Submit</button>
+        <button type="submit" id="formButton" name="formButton" value="reset" class="btn">Reset</button>
+    </div>        
+</form>
 </div>
