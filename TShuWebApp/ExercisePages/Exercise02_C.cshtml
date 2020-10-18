@@ -1,0 +1,27 @@
+﻿@{
+    Page.Title = "Title goes here";
+    Layout = "~/_layout.cshtml";
+
+    var artistID = Request.QueryString["aid"];
+
+    if(string.IsNullOrEmpty(artistID))
+    {
+        Response.Redirect("Exercise02_B.cshtml");
+    }
+
+    var db = Database.Open("Chinook");
+    var scalarCommand = "SELECT Name FROM Artists WHERE ArtistId = @0";
+    var albumName = db.QueryValue(scalarCommand, artistID);
+
+    var queryCommand = "SELECT AlbumId, Title, ReleaseYear, ReleaseLabel FROM Albums WHERE ArtistId = @0 ORDER BY Title";
+    var results = db.Query(queryCommand, artistID);
+
+    var gridInstance = new WebGrid(results, rowsPerPage: 2);
+}
+
+<div>
+    @section pagetitle {
+        <h1>Albums</h1>
+    }
+
+</div>

@@ -110,7 +110,7 @@
     <Content Include="ExercisePages\Exercise01.cshtml" />
     <Content Include="ExercisePages\Exercise02_A.cshtml" />
     <Content Include="ExercisePages\Exercise02_B.cshtml" />
-    <Content Include="ExercisePages\Exericise02_C.cshtml" />
+    <Content Include="ExercisePages\Exercise02_C.cshtml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />

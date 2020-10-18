@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
-    Page.Title = "Title goes here";
+    Page.Title = "Search Artist";
 
     var searchArg = Request.Form["SearchArg"];
     var search = Request.Form["formButton"];
@@ -35,6 +35,7 @@
         {
             artistId = results[0].ToString();
             artistName = results.Name;
+            Response.Redirect("Exercise02_B.cshtml?pn=" + searchArg);
         }
     }
 
