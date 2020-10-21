@@ -1,0 +1,43 @@
+﻿@{
+    Page.Title = "Insert";
+    Layout = "~/_Layout.cshtml";
+
+    var theButton = Request.Form["formButton"];
+
+    var title = "";
+    var artist = "";
+    var year = "";
+    var label = "";
+}
+
+<div class="container">
+    @section pagetitle {
+        <h1 style="text-align: center;">Insert Exercise</h1>
+    }
+
+    <h2 style="text-align:center;">Enter Album</h2>
+
+    <form id="theForm" action="" method="post">
+        <div class="row">
+            <div class="col-md-5 text-right">
+                <label id="title">Title:</label><br />
+                <label id="artist">Artist:</label><br />
+                <label id="year">Year:</label><br />
+                <label id="label">Label:</label><br />
+            </div>
+            <div class="col-md-5">
+                <input name="title" type="text" value="@title" /><br />
+                <input name="artist" type="text" value="@artist" /><br />
+                <input name="year" type="number" value="@year" /><br />
+                <input name="label" type="text" value="@label" /><br />
+            </div>
+        </div>
+        <div class="row" style="margin-top: 1rem;">
+            <div class="col-md-12 text-capitalize text-center">
+                <button type="submit" name="formButton" value="submit" class="btn btn-primary">Add</button>
+                &nbsp; &nbsp;
+                <button type="submit" name="formButton" value="reset" class="btn btn-primary">Clear</button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -5,7 +5,7 @@
     var artistName = Request.QueryString["pn"];
     var artistList = Request.Form["ArtistList"];
 
-    if(string.IsNullOrEmpty(artistName))
+    if (string.IsNullOrEmpty(artistName))
     {
         Response.Redirect("Exercise02_A.cshtml");
     }
@@ -20,50 +20,50 @@
 
 <div>
     @section pagetitle {
-        <h1>Fetch Album</h1>
+        <h1>Select Artist</h1>
     }
 
-<div>
-    @if (IsPost)
-    {
-        if (artistList.Equals("0"))
+    <div>
+        @if (IsPost)
         {
-            <p><span style="color:firebrick">You must select an artist.</span></p>
-        }
-
-        else
-        {
-            var queryCommand = "select albumId from albums where artistId = @0";
-            var results = db.Query(queryCommand, artistList);
-
-            if (results.Count() == 0)
+            if (artistList.Equals("0"))
             {
-                <p><span style="color:firebrick">There are no albums for this artist.</span></p>
+                <p><span style="color:firebrick">You must select an artist.</span></p>
             }
 
             else
             {
-                Response.Redirect("Exercise02_C.cshtml?aid=" + artistList);
+                var queryCommand = "SELECT title from albums where artistid = @0";
+                var results = db.Query(queryCommand, artistList);
+
+                if (results.Count() == 0)
+                {
+                    <p><span style="color:firebrick">There are no albums for this artist.</span></p>
+                }
+
+                else
+                {
+                    Response.Redirect("Exercise02_C.cshtml?aid=" + artistList);
+                }
             }
         }
-    }
 
 
 
-    <form id="theForm" action="" method="post">
-        <div class="row">
-            <div class="col-md-offset-3">
-                <label id="ArtistList">Select An Artist</label><br />
-                <select id="ArtistListID" name="ArtistList">
-                    <option value="0">Select An Artist</option>
-                    @foreach (var artist in ddlResults)
-                    {
-                        <option value="@artist.artistID">@artist.Name</option>
-                    }
-                </select>
-                <button type="submit" name="formButton" value="submit" class="btn-primary">Fetch Albums</button>
+        <form id="theForm" action="" method="post">
+            <div class="row">
+                <div class="col-md-offset-3">
+                    <label id="ArtistList">Select An Artist</label><br />
+                    <select id="ArtistListID" name="ArtistList">
+                        <option value="0">Select An Artist</option>
+                        @foreach (var artist in ddlResults)
+                        {
+                            <option value="@artist.artistID">@artist.Name</option>
+                        }
+                    </select>
+                    <button type="submit" name="formButton" value="submit" class="btn-primary">Fetch Albums</button>
+                </div>
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 </div>

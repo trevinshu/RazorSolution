@@ -1,27 +1,42 @@
 ﻿@{
-    Page.Title = "Title goes here";
+    Page.Title = "Display Albums";
     Layout = "~/_layout.cshtml";
 
     var artistID = Request.QueryString["aid"];
 
-    if(string.IsNullOrEmpty(artistID))
+    if (string.IsNullOrEmpty(artistID))
     {
-        Response.Redirect("Exercise02_B.cshtml");
+        Response.Redirect("Exercise02_A.cshtml");
     }
 
     var db = Database.Open("Chinook");
     var scalarCommand = "SELECT Name FROM Artists WHERE ArtistId = @0";
-    var albumName = db.QueryValue(scalarCommand, artistID);
+    var artistName = db.QueryValue(scalarCommand, artistID);
 
     var queryCommand = "SELECT AlbumId, Title, ReleaseYear, ReleaseLabel FROM Albums WHERE ArtistId = @0 ORDER BY Title";
     var results = db.Query(queryCommand, artistID);
 
-    var gridInstance = new WebGrid(results, rowsPerPage: 2);
+    var gridInstance = new WebGrid(results, rowsPerPage: 5);
+}
+
+
+@section pagetitle {
+    <h1>Display Albums</h1>
 }
 
 <div>
-    @section pagetitle {
-        <h1>Albums</h1>
-    }
+    <div class="container">
+        <h2><b>Albums by @artistName:</b></h2>
+        <br />
+        @gridInstance.GetHtml(tableStyle:"table table-bordered table-striped table-hover", 
+        columns:gridInstance.Columns(
+            gridInstance.Column(columnName: "AlbumId", header: "ID"),
+            gridInstance.Column(columnName: "Title", header: "Title"),
+            gridInstance.Column(columnName: "ReleaseYear", header: "Released"),
+            gridInstance.Column(columnName: "ReleaseLabel", header: "Label")
+            )
+       )
+    </div>
 
 </div>
+
