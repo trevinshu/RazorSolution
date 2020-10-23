@@ -15,6 +15,28 @@
         <h1 style="text-align: center;">Insert Exercise</h1>
     }
 
+    @if(IsPost)
+    {
+        if(theButton.Equals("reset"))
+        {
+            <p class="alert alert-success" style="text-align:center;"><b>Form Cleared</b></p>
+        }
+
+        else
+        {
+            title = Request.Form["title"];
+            artist = Request.Form["artist"];
+            year = Request.Form["year"];
+            label = Request.Form["label"];
+
+            var db = Database.Open("Chinook");
+            var insertCommand = "INSERT INTO Albums (Title, ArtistId, ReleaseYear, ReleaseLabel) VALUES(@0, @1, @2, @3)";
+
+
+           
+        }
+    }
+
     <h2 style="text-align:center;">Enter Album</h2>
 
     <form id="theForm" action="" method="post">
@@ -28,7 +50,7 @@
             <div class="col-md-5">
                 <input name="title" type="text" value="@title" /><br />
                 <input name="artist" type="text" value="@artist" /><br />
-                <input name="year" type="number" value="@year" /><br />
+                <input name="year" type="text" value="@year" /><br />
                 <input name="label" type="text" value="@label" /><br />
             </div>
         </div>
