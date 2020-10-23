@@ -5,9 +5,13 @@
     var theButton = Request.Form["formButton"];
 
     var title = "";
-    var artist = "";
+    var artist = "0";
     var year = "";
     var label = "";
+
+    var db = Database.Open("Chinook");
+    var artistQuery = "SELECT ArtistId, Name FROM Artists ORDER BY Name";
+    var artists = db.Query(artistQuery);
 }
 
 <div class="container">
@@ -15,9 +19,9 @@
         <h1 style="text-align: center;">Insert Exercise</h1>
     }
 
-    @if(IsPost)
+    @if (IsPost)
     {
-        if(theButton.Equals("reset"))
+        if (theButton.Equals("reset"))
         {
             <p class="alert alert-success" style="text-align:center;"><b>Form Cleared</b></p>
         }
@@ -29,11 +33,11 @@
             year = Request.Form["year"];
             label = Request.Form["label"];
 
-            var db = Database.Open("Chinook");
             var insertCommand = "INSERT INTO Albums (Title, ArtistId, ReleaseYear, ReleaseLabel) VALUES(@0, @1, @2, @3)";
+            db.Execute(insertCommand,title, artist, year, string.IsNullOrEmpty(label) ? null : label);
 
 
-           
+            <p class="alert alert-success" style="text-align:center;">Insert Successful</p>
         }
     }
 
@@ -49,7 +53,21 @@
             </div>
             <div class="col-md-5">
                 <input name="title" type="text" value="@title" /><br />
-                <input name="artist" type="text" value="@artist" /><br />
+                <select id="ArtistListID" name="artist">
+                    <option value="0">Select An Artist</option>
+                    @foreach (var item in artists)
+                    {
+                        if (item.ArtistId.ToString() == artist)
+                        {
+                            <option value="@item.ArtistId" selected>@item.Name</option>
+                        }
+
+                        else
+                        {
+                            <option value="@item.ArtistId">@item.Name</option>
+                        }
+                    }
+                </select>
                 <input name="year" type="text" value="@year" /><br />
                 <input name="label" type="text" value="@label" /><br />
             </div>
