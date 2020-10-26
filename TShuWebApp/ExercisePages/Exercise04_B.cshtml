@@ -1,0 +1,140 @@
+﻿@{
+    Page.Title = "Update Album";
+    Layout = "~/_layout.cshtml";
+
+    var aid = Request.QueryString["aid"];
+
+    if (aid.IsEmpty())
+    {
+        Response.Redirect("Exercise04_A.cshtml");
+    }
+
+    var albumID = Request.Form["AlbumID"];
+    var title = Request.Form["AlbumName"];
+    var artistID = Request.Form["ArtistID"];
+    var year = Request.Form["ReleaseYear"];
+    var label = Request.Form["ReleaseLabel"];
+    var theButton = Request.Form["theButton"];
+
+    var db = Database.Open("Chinook");
+
+    var artistQuery = "SELECT ArtistId, Name FROM Artists ORDER BY Name";
+    var queryArtists = db.Query(artistQuery);
+
+    var queryStatement = "SELECT AlbumId, Title, ArtistId, ReleaseYear, ReleaseLabel FROM Albums WHERE AlbumId = @0";
+    var queryAlbums = db.QuerySingle(queryStatement, aid);
+
+    Validation.Add("title",
+                       Validator.Required("Title is required"),
+                       Validator.StringLength(160, 1, "Title must be less than 160 characters"));
+    Validation.Add("ArtistId",
+       Validator.Required("Must select an artist"));
+    Validation.Add("ReleaseYear",
+        Validator.Required("Year is out of range. Must be between 1950 & 2020"),
+        Validator.Range(1950, 2020));
+    Validation.Add("ReleaseLabel",
+        Validator.StringLength(50, 1, "Label must be less than 50 characters"));
+
+}
+
+<div>
+    @section pagetitle {
+        <h1 style="text-align: center;">Update Album</h1>
+    }
+
+
+    @if (IsPost)
+    {
+        if (theButton.Equals("cancel"))
+        {
+            Response.Redirect("Exercise04_A.cshtml");
+        }
+
+        if (theButton.Equals("delete"))
+        {
+            var deleteCommand = "DELETE Albums WHERE AlbumId = @0";
+            var result = db.Execute(deleteCommand, albumID);
+            if (result > 0)
+            {
+                <p class="alert-success">Album Deleted</p>
+            }
+
+            else
+            {
+                <p class="alert-danger">Album Delete Failed</p>
+            }
+        }
+
+        else
+        {
+            var updateCommand = "UPDATE Albums SET Title = @0, ArtistId = @1, ReleaseYear = @2, ReleaseLabel = @3 WHERE AlbumId = @4";
+            int result = db.Execute(updateCommand, title, artistID, year, string.IsNullOrEmpty(label) ? null : label, albumID);
+
+            if (result > 0)
+            {
+                <p class="alert-success">Album Updated</p>
+            }
+
+            else
+            {
+                <p class="alert-danger">Album Update Failed</p>
+            }
+        }
+    }
+
+
+    else
+    {
+        title = queryAlbums.Title.ToString();
+        artistID = queryAlbums.ArtistId.ToString();
+        albumID = queryAlbums.AlbumId.ToString();
+        year = queryAlbums.ReleaseYear.ToString();
+        label = queryAlbums.ReleaseLabel.ToString();
+
+    }
+    <form id="theForm" method="post" action="">
+        <div class="row">
+            <div class="col-md-offset-1 col-md-2">
+                <label id="AlbumID">Album ID</label><br />
+                <label id="AlbumName">Title</label><br />
+                <label id="ArtistID">Artist ID</label><br />
+                <label id="ReleaseYear">Year</label><br />
+                <label id="ReleaseLabel">Label</label><br />
+            </div>
+            <div col-md-9>
+                <input type="text" name="AlbumID" value="@albumID" readonly /> <br />
+                <input type="text" name="AlbumName" value="@title" /> <br />
+                <select name="ArtistID">
+                    <option value="0">Select An Artist</option>
+                    @foreach (var item in queryArtists)
+                    {
+                        if (item.ArtistId.ToString() == artistID)
+                        {
+                            <option value="@item.ArtistId" selected>@item.Name</option>
+                        }
+
+                        else
+                        {
+                            <option value="@item.ArtistId">@item.Name</option>
+                        }
+                    }
+                </select><br />
+                <input type="text" name="ReleaseYear" value="@year" /> <br />
+                <input type="text" name="ReleaseLabel" value="@label" /> <br />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-offset-1 col-md-3">
+                <button type="submit" name="theButton" id="theUpdate" class="btn btn-primary" value="update">Update Album</button>
+                &nbsp; &nbsp; &nbsp;
+
+                <button type="submit" name="theButton" id="theDelete" class="btn btn-primary" value="delete">Delete Album</button>
+                &nbsp; &nbsp; &nbsp;
+
+                <button type="submit" name="theButton" id="theCancel" class="btn btn-primary" value="cancel">Cancel</button>
+            </div>
+        </div>
+    </form>
+
+</div>

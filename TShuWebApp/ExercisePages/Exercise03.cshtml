@@ -12,6 +12,18 @@
     var db = Database.Open("Chinook");
     var artistQuery = "SELECT ArtistId, Name FROM Artists ORDER BY Name";
     var artists = db.Query(artistQuery);
+
+    Validation.Add("title",
+                        Validator.Required("Title is required"),
+                        Validator.StringLength(160, 1, "Title must be less than 160 characters"));
+    Validation.Add("ArtistId",
+       Validator.Required("Must select an artist"));
+    Validation.Add("ReleaseYear",
+        Validator.Required("Year is out of range. Must be between 1950 & 2020"),
+        Validator.Range(1950, 2020));
+    Validation.Add("ReleaseLabel",
+        Validator.StringLength(50, 1, "Label must be less than 50 characters"));
+
 }
 
 <div class="container">
@@ -33,16 +45,30 @@
             year = Request.Form["year"];
             label = Request.Form["label"];
 
-            var insertCommand = "INSERT INTO Albums (Title, ArtistId, ReleaseYear, ReleaseLabel) VALUES(@0, @1, @2, @3)";
-            db.Execute(insertCommand,title, artist, year, string.IsNullOrEmpty(label) ? null : label);
+            if (Validation.IsValid())
+            {
+                try
+                {
+                    var insertCommand = "INSERT INTO Albums (Title, ArtistId, ReleaseYear, ReleaseLabel) VALUES(@0, @1, @2, @3)";
+                    db.Execute(insertCommand, title, artist, year, string.IsNullOrEmpty(label) ? null : label);
+                    <p class="alert alert-success" style="text-align:center;">Insert Successful</p>
+                }
+
+                catch (Exception Ex)
+                {
+                    <p class="alert-danger">@Ex.Message</p>
+                }
+            }
 
 
-            <p class="alert alert-success" style="text-align:center;">Insert Successful</p>
+
+
         }
     }
 
     <h2 style="text-align:center;">Enter Album</h2>
 
+    @Html.ValidationSummary()
     <form id="theForm" action="" method="post">
         <div class="row">
             <div class="col-md-5 text-right">
